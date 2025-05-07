@@ -1,6 +1,7 @@
 // src/components/Login.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/img/logo.png';
 
 export default function Login() {
   return (
@@ -10,10 +11,7 @@ export default function Login() {
         <div className="w-full max-w-lg bg-transparent">
           {/* Logo */}
           <div className="text-center mb-10">
-            <h1 className="text-6xl font-bold text-[#a78bfa]">
-              <span className="text-[#6b7280]">i</span>Welin
-              <span className="text-[#6b7280]">K</span>
-            </h1>
+            <img src={logo} alt="iWelin K Logo" className="mx-auto w-32 h-32" />
           </div>
 
           {/* Titre */}
