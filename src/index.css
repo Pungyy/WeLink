@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'Expressa';
+    src: url('/fonts/Expressa-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Futura';
+    src: url('/fonts/Futura-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Futura', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    font-family: 'Expressa';
+}
