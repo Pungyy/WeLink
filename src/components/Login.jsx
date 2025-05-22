@@ -22,16 +22,16 @@ export default function Login() {
             <input
               type="email"
               placeholder="Email"
-              className="px-5 py-3 mb-6 rounded-full border border-gray-300 bg-[#B0B0B023] text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300 max-w-[50%]"
+              className="px-5 py-3 rounded-full border border-gray-300 bg-[#B0B0B023] text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300"
             />
             <input
               type="password"
               placeholder="Mot de Passe"
-              className="px-5 py-3 rounded-full border border-gray-300 bg-[#B0B0B023] text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              className="px-5 py-3 mb-6 rounded-full border border-gray-300 bg-[#B0B0B023] text-base placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300"
             />
             <button
               type="submit"
-              className="bg-[#7b8c76] text-white py-3 rounded-full font-semibold hover:bg-[#66735f] transition"
+              className="bg-[#7b8c76] text-black py-3 rounded-full hover:bg-[#66735f] transition p-5"
             >
               Se connecter
             </button>
@@ -39,13 +39,13 @@ export default function Login() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-gray-400" />
-            <span className="text-sm text-gray-600">Ou</span>
-            <div className="flex-1 h-px bg-gray-400" />
+            <div className="flex-1 h-px bg-black" />
+            <span className="text-sm text-black">Ou</span>
+            <div className="flex-1 h-px bg-black" />
           </div>
 
           {/* Lien inscription */}
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-black">
             Créer un compte ?{" "}
             <Link to="/signup" className="text-blue-500 hover:underline">
               S’inscrire
