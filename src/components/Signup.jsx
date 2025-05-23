@@ -1,6 +1,7 @@
 // src/components/Signup.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/img/logo.png';
 
 export default function Signup() {
   const [gender, setGender] = useState('');
@@ -10,10 +11,8 @@ export default function Signup() {
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="w-full max-w-lg bg-transparent">
           {/* Logo */}
-          <div className="text-center mb-8">
-            <h1 className="text-6xl font-bold text-[#a78bfa]">
-              <span className="text-[#6b7280]">WeLinK</span>
-            </h1>
+         <div className="text-center mb-10">
+            <img src={logo} alt="Welink Logo" className="mx-auto max-w-[200px] md:max-w-[220px] w-full h-auto" />
           </div>
 
           {/* Titre */}
@@ -81,17 +80,6 @@ export default function Signup() {
             </p>
 
         </div>
-      </div>
-
-      {/* SVG vague en bas */}
-      <div className="w-full">
-        <svg viewBox="0 0 1440 320" className="w-full h-32">
-          <path
-            fill="#d8b4fe"
-            fillOpacity="1"
-            d="M0,256L48,240C96,224,192,192,288,186.7C384,181,480,203,576,197.3C672,192,768,160,864,160C960,160,1056,192,1152,197.3C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          ></path>
-        </svg>
       </div>
     </div>
   );
