@@ -64,7 +64,6 @@ export default function Signup() {
       return;
     }
 
-    // Upload avatar si présent
     if (avatar) {
       const fileExt = avatar.name.split('.').pop();
       const filePath = `avatars/${user.id}.${fileExt}`;

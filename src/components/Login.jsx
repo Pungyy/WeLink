@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
 
+
 export default function Login() {
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#EDEDE9] relative">
