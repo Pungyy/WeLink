@@ -27,7 +27,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#EDEDE9] relative">
+    <div className="
+                    min-h-screen flex flex-col justify-between 
+                    bg-[url('./assets/img/polygon.png')] 
+                    md:bg-[url('./assets/img/desktop.png')] 
+                    bg-no-repeat bg-bottom bg-contain relative
+                  ">
       {/* Contenu centré */}
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="w-full max-w-md md:max-w-lg bg-transparent">
