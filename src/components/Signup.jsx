@@ -16,6 +16,7 @@ export default function Signup() {
   const [localisation, setLocalisation] = useState('');
   const [avatar, setAvatar] = useState(null);
   const [message, setMessage] = useState('');
+  const [birthdateError, setBirthdateError] = useState('');
 
   const nextStep = () => setStep((s) => s + 1);
   const prevStep = () => setStep((s) => s - 1);
@@ -35,9 +36,33 @@ export default function Signup() {
       return;
     }
 
+    // Vérification de la date de naissance invalide
+    if (birthdateError) {
+      setMessage("Date de naissance invalide.");
+      return;
+    }
+
+    // Vérifie si l’email existe déjà dans la table utilisateurs
+    const { data: existingUsers, error: emailCheckError } = await supabase
+      .from('utilisateurs')
+      .select('email')
+      .eq('email', email);
+
+    if (emailCheckError) {
+      setMessage("Erreur lors de la vérification de l'email.");
+      return;
+    }
+
+    if (existingUsers.length > 0) {
+      setMessage("Cet email est déjà utilisé.");
+      return;
+    }
+
+    // Parse nom et prénom
     const [prenom = '', nom = ''] = nomPrenom.trim().split(' ').reverse();
     const dobISO = formatDateISO(birthdate);
 
+    // Création de l'utilisateur Supabase
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -64,6 +89,7 @@ export default function Signup() {
       return;
     }
 
+    // Upload de l'avatar
     if (avatar) {
       const fileExt = avatar.name.split('.').pop();
       const filePath = `avatars/${user.id}.${fileExt}`;
@@ -86,10 +112,67 @@ export default function Signup() {
     setMessage("Inscription réussie ! Vérifie ton email pour confirmer.");
   };
 
-  const inputClass = "px-5 py-3 rounded-full border border-gray-300 bg-white placeholder:text-gray-400";
 
+  
+  const handleBirthdateChange = (e) => {
+    let input = e.target.value.replace(/\D/g, "");
+    if (input.length > 8) input = input.slice(0, 8);
+    
+    let formatted = "";
+    if (input.length > 4) {
+      formatted = `${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4)}`;
+    } else if (input.length > 2) {
+      formatted = `${input.slice(0, 2)}/${input.slice(2)}`;
+    } else {
+      formatted = input;
+    }
+    
+    setBirthdate(formatted);
+    
+    // Validation de la date quand elle est complète
+    if (formatted.length === 10) {
+      if (!isValidDate(formatted)) {
+        setBirthdateError("Date invalide ou âge non autorisé (18 à 100 ans).");
+      }
+      else {
+        setBirthdateError("");
+      }
+    } else {
+      setBirthdateError(""); // Réinitialiser pendant la saisie
+    }
+  };
+  
+  
+  const isValidDate = (str) => {
+    const [day, month, year] = str.split('/').map(Number);
+    if (!day || !month || !year) return false;
+    
+    const date = new Date(year, month - 1, day);
+    const today = new Date();
+    const age = today.getFullYear() - year;
+    
+    const tooYoung = age < 18 || (age === 18 && today < new Date(year + 18, month - 1, day));
+    const tooOld = age > 100;
+    
+    return (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day &&
+      !tooYoung &&
+      !tooOld
+    );
+  };
+  
+  const inputClass = "px-5 py-3 rounded-full border border-gray-300 bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300";
+  
+  
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#f5f5f0] overflow-hidden">
+    <div className="
+    min-h-screen flex flex-col justify-between 
+    bg-[url('./assets/img/polygon.png')] 
+    md:bg-[url('./assets/img/desktop.png')] 
+    bg-no-repeat bg-bottom bg-contain relative
+    ">
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="w-full max-w-lg bg-transparent">
           <div className="text-center mb-10">
@@ -111,16 +194,26 @@ export default function Signup() {
                 >
                   <div className="flex justify-center gap-6 ">
                     <label className="flex items-center space-x-2">
-                      <input type="radio" name="gender" value="Mme" checked={gender === 'Mme'} onChange={() => setGender('Mme')} className="accent-[#7b8c76]" />
+                      <input type="radio" name="gender" value="Mme" checked={gender === 'Mme'} onChange={() => setGender('Mme')} className="accent-[#CEB6D9]" />
                       <span>Madame</span>
                     </label>
                     <label className="flex items-center space-x-2">
-                      <input type="radio" name="gender" value="M" checked={gender === 'M'} onChange={() => setGender('M')} className="accent-[#7b8c76]" />
+                      <input type="radio" name="gender" value="M" checked={gender === 'M'} onChange={() => setGender('M')} className="accent-[#CEB6D9]" />
                       <span>Monsieur</span>
                     </label>
                   </div>
                   <input type="text" placeholder="Nom et Prénom" value={nomPrenom} onChange={(e) => setNomPrenom(e.target.value)} className={inputClass} required />
-                  <input type="text" placeholder="JJ/MM/AAAA" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} className={inputClass} required />
+                  <input
+                    type="text"
+                    placeholder="JJ/MM/AAAA"
+                    value={birthdate}
+                    onChange={handleBirthdateChange}
+                    className={inputClass}
+                    required
+                  />
+                  {birthdateError && (
+                    <p className="text-sm text-red-500 -mt-3">{birthdateError}</p>
+                  )}
                   <input type="text" placeholder="Adresse" value={localisation} onChange={(e) => setLocalisation(e.target.value)} className={inputClass} required />
                 </motion.div>
               )}
@@ -170,7 +263,7 @@ export default function Signup() {
                       <button
                         type="button"
                         onClick={prevStep}
-                        className="text-sm text-gray-600 hover:underline"
+                        className="bg-[#7b8c76] text-black py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
                       >
                         Précédent
                       </button>
@@ -185,14 +278,14 @@ export default function Signup() {
                       <button
                         type="button"
                         onClick={nextStep}
-                        className="bg-[#7b8c76] text-white py-2 px-4 rounded-full hover:bg-[#66735f]"
+                        className="bg-[#7b8c76] text-black py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
                       >
                         Suivant
                       </button>
                     ) : (
                       <button
                         type="submit"
-                        className="bg-[#7b8c76] text-white py-2 px-4 rounded-full hover:bg-[#66735f]"
+                        className="bg-[#7b8c76] text-black py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
                       >
                         S'inscrire
                       </button>
@@ -204,8 +297,8 @@ export default function Signup() {
             </AnimatePresence>
 
 
-            {message && <p className="text-center text-sm text-red-500 mt-3">{message}</p>}
           </form>
+            {message && <p className="text-center text-sm text-red-500 mt-3">{message}</p>}
 
 
           <p className="text-center text-sm text-gray-600 mt-6">
