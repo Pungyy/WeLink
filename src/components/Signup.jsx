@@ -255,7 +255,7 @@ export default function Signup() {
                     />
                     <label
                       htmlFor="avatar-upload"
-                      className="w-40 h-40 border-2 border-dashed border-gray-400 rounded-md flex items-center justify-center cursor-pointer hover:border-purple-500 transition-colors relative overflow-hidden"
+                      className="w-60 h-60 border-2 border-dashed border-gray-400 rounded-md flex items-center justify-center cursor-pointer hover:border-purple-500 transition-colors relative overflow-hidden"
                       title="Cliquez pour uploader votre photo"
                     >
                       {avatar ? (
