@@ -234,17 +234,46 @@ export default function Signup() {
               )}
 
               {step === 3 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 50 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col gap-5 absolute w-full"
-                >
-                  <input type="file" accept="image/*" onChange={(e) => setAvatar(e.target.files[0])} className="text-sm text-gray-700" />
-                </motion.div>
-              )}
+                  <motion.div
+                    key="step3"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col gap-5 absolute w-full items-center"
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      id="avatar-upload"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setAvatar(e.target.files[0]);
+                        }
+                      }}
+                    />
+                    <label
+                      htmlFor="avatar-upload"
+                      className="w-40 h-40 border-2 border-dashed border-gray-400 rounded-md flex items-center justify-center cursor-pointer hover:border-purple-500 transition-colors relative overflow-hidden"
+                      title="Cliquez pour uploader votre photo"
+                    >
+                      {avatar ? (
+                        <img
+                          src={URL.createObjectURL(avatar)}
+                          alt="Aperçu avatar"
+                          className="w-full h-full object-cover rounded-md"
+                          onLoad={e => URL.revokeObjectURL(e.target.src)} // libérer mémoire
+                        />
+                      ) : (
+                        <span className="text-gray-500 text-center px-2">
+                          Cliquez ici pour uploader votre photo
+                        </span>
+                      )}
+                    </label>
+                  </motion.div>
+                )}
+
             </AnimatePresence>
 
               {/* BOUTONS DE NAVIGATION */}
