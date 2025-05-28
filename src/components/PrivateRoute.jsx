@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function PrivateRoute({ children }) {
   const [user, setUser] = useState(null);
@@ -25,9 +26,9 @@ export default function PrivateRoute({ children }) {
     };
   }, []);
 
-  if (loading) return <div>Chargement...</div>;
+  if (loading) return <LoadingSpinner />;
 
-  if (!user) return <Navigate to="/" replace />; // pas connecté, redirection vers login
+  if (!user) return <Navigate to="/Login" replace />; // pas connecté, redirection vers login
 
   return children; // connecté, affiche la page protégée
 }
