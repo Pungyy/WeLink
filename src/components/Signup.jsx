@@ -82,13 +82,17 @@ export default function Signup() {
       return;
     }
 
+    // Après création du compte Supabase Auth
     const user = data.user;
+    if (!user) {
+      setMessage("Erreur inconnue lors de la création du compte.");
+      return;
+    }
 
     let avatarUrl = null;
     if (avatar) {
       const fileExt = avatar.name.split('.').pop();
       const uniqueName = crypto.randomUUID(); // ou Date.now()
-      // **Ici, on met le fichier à la racine du bucket 'avatars', pas dans un sous-dossier avatars/**
       const filePath = `${uniqueName}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
@@ -104,23 +108,26 @@ export default function Signup() {
       avatarUrl = publicUrlData?.publicUrl;
     }
 
-    // Stocker les données dans la table `utilisateurs`
-    const { error: insertError } = await supabase
+    // Ici on utilise upsert avec l'ID utilisateur (clé primaire)
+    // Assure-toi que 'id' dans ta table utilisateurs correspond bien à user.id
+    const { error: upsertError } = await supabase
       .from('utilisateurs')
-      .insert({
-        email,
+      .upsert({
+        id: user.id,
         genre: gender,
         nom,
         prenom,
         dob: dobISO,
+        email,
         localisation,
         photo_profil: avatarUrl,
-      });
+      }, { onConflict: 'id' });
 
-    if (insertError) {
-      setMessage("Erreur lors de l'enregistrement des données utilisateur : " + insertError.message);
+    if (upsertError) {
+      setMessage("Erreur lors de l'enregistrement des données utilisateur : " + upsertError.message);
       return;
     }
+
 
     setMessage("Inscription réussie ! Vérifie ton email pour confirmer.");
   };
