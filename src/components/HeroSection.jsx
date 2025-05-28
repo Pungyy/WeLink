@@ -1,10 +1,10 @@
 // components/HeroSection.jsx
-
+import HeroImage from "../assets/img/hero.jpeg";
 const HeroSection = () => {
   return (
     <section className="relative">
       <img
-        src="/hero.jpg"
+        src={HeroImage}
         alt="groupe de personnes âgées"
         className="w-full h-[400px] object-cover rounded-b-3xl"
       />
