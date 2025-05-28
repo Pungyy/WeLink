@@ -36,7 +36,6 @@ export default function Signup() {
       return;
     }
 
-    // Vérification de la date de naissance invalide
     if (birthdateError) {
       setMessage("Date de naissance invalide.");
       return;
@@ -62,7 +61,7 @@ export default function Signup() {
     const [prenom = '', nom = ''] = nomPrenom.trim().split(' ').reverse();
     const dobISO = formatDateISO(birthdate);
 
-    // Création de l'utilisateur Supabase
+    // Création de l'utilisateur Supabase Auth
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -74,8 +73,8 @@ export default function Signup() {
           dob: dobISO,
           email,
           localisation,
-        }
-      }
+        },
+      },
     });
 
     if (error) {
@@ -84,33 +83,48 @@ export default function Signup() {
     }
 
     const user = data.user;
-    if (!user) {
-      setMessage("Erreur lors de la création de l'utilisateur.");
-      return;
-    }
 
-    // Upload de l'avatar
+    let avatarUrl = null;
     if (avatar) {
       const fileExt = avatar.name.split('.').pop();
-      const filePath = `avatars/${user.id}.${fileExt}`;
+      const uniqueName = crypto.randomUUID(); // ou Date.now()
+      // **Ici, on met le fichier à la racine du bucket 'avatars', pas dans un sous-dossier avatars/**
+      const filePath = `${uniqueName}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, avatar, { upsert: true });
 
       if (uploadError) {
-        setMessage("Inscription réussie, mais erreur d'image : " + uploadError.message);
+        setMessage("Inscription réussie, mais erreur lors de l'upload de l'image : " + uploadError.message);
         return;
       }
 
       const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
-      const avatarUrl = publicUrlData?.publicUrl;
+      avatarUrl = publicUrlData?.publicUrl;
+    }
 
-      await supabase.auth.updateUser({ data: { avatar_url: avatarUrl } });
+    // Stocker les données dans la table `utilisateurs`
+    const { error: insertError } = await supabase
+      .from('utilisateurs')
+      .insert({
+        email,
+        genre: gender,
+        nom,
+        prenom,
+        dob: dobISO,
+        localisation,
+        avatar_url: avatarUrl,
+      });
+
+    if (insertError) {
+      setMessage("Erreur lors de l'enregistrement des données utilisateur : " + insertError.message);
+      return;
     }
 
     setMessage("Inscription réussie ! Vérifie ton email pour confirmer.");
   };
+
 
 
   
