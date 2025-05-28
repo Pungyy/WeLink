@@ -114,7 +114,7 @@ export default function Signup() {
         prenom,
         dob: dobISO,
         localisation,
-        avatar_url: avatarUrl,
+        photo_profil: avatarUrl,
       });
 
     if (insertError) {
