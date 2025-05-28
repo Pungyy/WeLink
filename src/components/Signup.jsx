@@ -126,8 +126,6 @@ export default function Signup() {
   };
 
 
-
-  
   const handleBirthdateChange = (e) => {
     let input = e.target.value.replace(/\D/g, "");
     if (input.length > 8) input = input.slice(0, 8);
