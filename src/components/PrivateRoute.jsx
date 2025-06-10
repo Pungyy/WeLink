@@ -8,27 +8,40 @@ export default function PrivateRoute({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-      setLoading(false);
+      const { data, error } = await supabase.auth.getUser();
+      if (mounted) {
+        setUser(data?.user || null);
+        setLoading(false);
+      }
     };
+
     getUser();
 
-    // Écoute les changements d'authentification (optionnel)
+    // Optionnel : écoute des changements
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
+      if (mounted) {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
     });
 
     return () => {
+      mounted = false;
       authListener?.subscription.unsubscribe();
     };
   }, []);
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-  if (!user) return <Navigate to="/Login" replace />; // pas connecté, redirection vers login
+  // Ici, on NE redirige que si on est sûr que l'utilisateur n'est pas connecté
+  if (!user) {
+    return <Navigate to="/Login" replace />;
+  }
 
-  return children; // connecté, affiche la page protégée
+  return children;
 }
