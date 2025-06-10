@@ -4,25 +4,34 @@ import Signup from './pages/SignupPage';
 import Home from './pages/Home';
 import PrivateRoute from './components/PrivateRoute';
 import PrivateLayout from './components/PrivateLayout';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirection de la racine vers /Login */}
         <Route path="/" element={<Navigate to="/Login" replace />} />
-
-        {/* Auth */}
         <Route path="/Login" element={<Login />} />
         <Route path="/Signup" element={<Signup />} />
 
-        {/* Pages protégées avec layout contenant la navbar */}
         <Route
           path="/home"
           element={
             <PrivateRoute>
               <PrivateLayout>
                 <Home />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Route dynamique utilisateur */}
+        <Route
+          path="/user/:id"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <UserProfile />
               </PrivateLayout>
             </PrivateRoute>
           }

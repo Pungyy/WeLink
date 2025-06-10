@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
 const UtilisateursSection = () => {
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUtilisateurs = async () => {
       const { data, error } = await supabase
         .from("utilisateurs")
         .select("id, prenom, photo_profil, description")
-        .limit(20) // limite à 20 utilisateurs pour la perf
+        .limit(20)
         .order('prenom', { ascending: true });
 
       if (error) {
@@ -25,17 +27,17 @@ const UtilisateursSection = () => {
     fetchUtilisateurs();
   }, []);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center py-10">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
+  if (loading) return (
+    <div className="flex justify-center items-center py-10">
+      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   if (error) return <p className="text-red-600 py-10 text-center">Erreur : {error}</p>;
 
-  if (utilisateurs.length === 0)
-    return <p className="text-gray-500 py-10 text-center">Aucun utilisateur trouvé.</p>;
+  if (utilisateurs.length === 0) return (
+    <p className="text-gray-500 py-10 text-center">Aucun utilisateur trouvé.</p>
+  );
 
   return (
     <section className="px-6 py-10 max-w-7xl mx-auto">
@@ -44,6 +46,7 @@ const UtilisateursSection = () => {
         {utilisateurs.map((user) => (
           <div
             key={user.id}
+            onClick={() => navigate(`/user/${user.id}`)}
             className="flex flex-col items-center min-w-[100px] max-w-[140px] bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
             title={user.description || ""}
           >
