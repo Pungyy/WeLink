@@ -22,7 +22,7 @@ const EvenementsSection = () => {
   }, []);
 
   return (
-    <section className="bg-[#f8f8fa] px-6 py-10">
+    <section className="bg-[#fff] px-6 py-10">
       <div className="container mx-auto">
         <h2 className="text-2xl font-semibold mb-6 text-center">
           Événements à venir
