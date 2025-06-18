@@ -6,7 +6,8 @@ const HeroSection = () => {
       <img
         src={HeroImage}
         alt="groupe de personnes âgées"
-        className="w-full h-[400px] object-cover rounded-b-3xl"
+        className="w-full object-cover rounded-b-3xl"
+        style={{ height: "700px" }}
       />
       <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-b-3xl">
         <h1 className="text-white text-4xl font-bold text-center px-4">
