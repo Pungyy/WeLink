@@ -6,7 +6,18 @@ import { supabase } from '../lib/supabaseClient';
 export default function ChatPage() {
   const { id: targetId } = useParams();
   const [targetUser, setTargetUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
+  // Récupérer l'utilisateur connecté
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setCurrentUser(data.user);
+    };
+    getCurrentUser();
+  }, []);
+
+  // Charger les infos du targetUser
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await supabase
@@ -16,8 +27,24 @@ export default function ChatPage() {
         .single();
       setTargetUser(data);
     };
-    fetchUser();
+    if (targetId) fetchUser();
   }, [targetId]);
+
+  // Marquer les messages reçus non lus comme lus dès que la page/chat s'ouvre
+  useEffect(() => {
+    const markMessagesAsRead = async () => {
+      if (!currentUser || !targetId) return;
+
+      await supabase
+        .from('messages')
+        .update({ vu: true })
+        .eq('receiver_id', currentUser.id)
+        .eq('sender_id', targetId)
+        .eq('vu', false);
+    };
+
+    markMessagesAsRead();
+  }, [currentUser, targetId]);
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">

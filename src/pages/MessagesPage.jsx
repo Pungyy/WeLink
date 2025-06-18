@@ -27,7 +27,7 @@ export default function MessagesPage() {
         amis.map(async (ami) => {
           const { data: lastMsg } = await supabase
             .from('messages')
-            .select('created_at, sender_id')
+            .select('created_at, sender_id, receiver_id, vu')
             .or(
               `and(sender_id.eq.${currentUser.id},receiver_id.eq.${ami.ami_id}),and(sender_id.eq.${ami.ami_id},receiver_id.eq.${currentUser.id})`
             )
@@ -39,8 +39,15 @@ export default function MessagesPage() {
             ...ami,
             lastMessageDate: lastMsg?.created_at || null,
             lastMessageSender: lastMsg?.sender_id || null,
+            lastMessageVu: lastMsg?.vu,
+            lastMessageReceiver: lastMsg?.receiver_id,
           };
         })
+      );
+
+      // Trier par date de dernier message (récents en haut)
+      friendsWithLastMsg.sort((a, b) =>
+        new Date(b.lastMessageDate || 0) - new Date(a.lastMessageDate || 0)
       );
 
       setFriends(friendsWithLastMsg);
@@ -56,6 +63,7 @@ export default function MessagesPage() {
       <div className="flex-1 overflow-y-auto divide-y">
         {friends.map((f) => {
           const isReceived = f.lastMessageSender && f.lastMessageSender !== user?.id;
+          const isUnread = isReceived && f.lastMessageVu === false && f.lastMessageReceiver === user?.id;
 
           return (
             <button
@@ -82,7 +90,8 @@ export default function MessagesPage() {
                 </div>
               </div>
 
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              {/* Pastille verte uniquement si message non lu */}
+              {isUnread && <div className="w-3 h-3 bg-green-500 rounded-full"></div>}
             </button>
           );
         })}
