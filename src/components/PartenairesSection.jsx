@@ -1,5 +1,5 @@
 const PartenairesSection = () => {
-  const partners = ["/logos/carrefour.png", "/logos/tcl.png", "/logos/pathe.png", "/logos/fnac.png"];
+  const partners = ["../assets/img/tcl.png", "/logos/tcl.png", "/logos/pathe.png", "/logos/fnac.png"];
 
   return (
     <section className="p-6">

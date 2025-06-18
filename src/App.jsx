@@ -10,6 +10,7 @@ import MessagesPage from './pages/MessagesPage';
 import ChatPage from './pages/ChatPage';
 import CreateEventPage from './pages/CreateEventPage';
 import EvenementsPage from './pages/EvenementsPage';
+import GuideUtilisateur from './pages/GuideUtilisateur';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Signup" element={<Signup />} />
         <Route path="/confirmation" element={<ConfirmationPage />} />
+        <Route path="/guide-utilisateur" element={<GuideUtilisateur />} />
 
         {/* Routes privées */}
         <Route
