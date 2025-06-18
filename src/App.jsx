@@ -5,15 +5,19 @@ import Home from './pages/Home';
 import PrivateRoute from './components/PrivateRoute';
 import PrivateLayout from './components/PrivateLayout';
 import UserProfile from './pages/UserProfile';
+import MessagesPage from './pages/MessagesPage';
+import ChatPage from './pages/ChatPage';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Routes publiques */}
         <Route path="/" element={<Navigate to="/Login" replace />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Signup" element={<Signup />} />
 
+        {/* Routes privées */}
         <Route
           path="/home"
           element={
@@ -25,13 +29,34 @@ function App() {
           }
         />
 
-        {/* Route dynamique utilisateur */}
         <Route
           path="/user/:id"
           element={
             <PrivateRoute>
               <PrivateLayout>
                 <UserProfile />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/messages"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <MessagesPage />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/chat/:id"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <ChatPage />
               </PrivateLayout>
             </PrivateRoute>
           }
