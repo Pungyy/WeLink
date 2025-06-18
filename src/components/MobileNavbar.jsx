@@ -7,9 +7,9 @@ import userIcon from "../assets/img/vector.png";
 
 const tabs = [
   { name: "home", icon: homeIcon, path: "/home" },
-  { name: "explore", icon: compassIcon, path: "/explore" },
-  { name: "chat", icon: chatIcon, path: "/chat" },
-  { name: "profile", icon: userIcon, path: "/profile" },
+  { name: "explore", icon: compassIcon, path: "/" },
+  { name: "chat", icon: chatIcon, path: "/messages" },
+  { name: "profile", icon: userIcon, path: "/" },
 ];
 
 export default function MobileNavbar() {
