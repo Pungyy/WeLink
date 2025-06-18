@@ -24,7 +24,7 @@ const NouveautesSection = () => {
   return (
     <section className="bg-[#fff] px-6 py-10">
       <div className="container mx-auto">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Nouveautés</h2>
+        <h2 className="text-4xl font-semibold mb-6 text-center">Nouveautés</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
           {nouveautes.map((item) => (
             <div

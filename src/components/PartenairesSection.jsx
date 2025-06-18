@@ -10,7 +10,7 @@ const PartenairesSection = () => {
 
   return (
     <section className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Partenaires</h2>
+      <h2 className="text-4xl font-semibold mb-4 text-center">Partenaires</h2>
       <div className="flex justify-around items-center">
         {partners.map((logo, index) => (
           <img

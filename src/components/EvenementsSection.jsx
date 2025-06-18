@@ -24,7 +24,7 @@ const EvenementsSection = () => {
   return (
     <section className="bg-[#fff] px-6 py-10">
       <div className="container mx-auto">
-        <h2 className="text-2xl font-semibold mb-6 text-center">
+        <h2 className="text-4xl font-semibold mb-6 text-center">
           Événements à venir
         </h2>
         <div className="flex flex-wrap justify-center gap-6">

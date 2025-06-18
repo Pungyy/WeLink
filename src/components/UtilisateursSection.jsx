@@ -41,7 +41,7 @@ const UtilisateursSection = () => {
 
   return (
     <section className="px-6 py-10 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-semibold mb-8 text-center">Nos Utilisateurs</h2>
+      <h2 className="text-4xl font-semibold mb-8 text-center">Nos Utilisateurs</h2>
       <div className="flex gap-8 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-200 px-2 py-4">
         {utilisateurs.map((user) => (
           <div
