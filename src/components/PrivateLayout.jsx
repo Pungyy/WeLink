@@ -1,11 +1,11 @@
 import React from 'react';
-import MobileNavbar from './MobileNavbar';
+import MainNavbar from './MainNavbar';
 
 export default function PrivateLayout({ children }) {
   return (
-    <div className="pb-20"> {/* Ajoute un padding en bas pour la navbar */}
+    <div className="pb-20">
+      <MainNavbar />
       {children}
-      <MobileNavbar />
     </div>
   );
 }
