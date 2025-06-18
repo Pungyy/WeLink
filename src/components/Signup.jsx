@@ -311,7 +311,7 @@ export default function Signup() {
                       <button
                         type="button"
                         onClick={prevStep}
-                        className="bg-[#7b8c76] text-black py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
+                        className="bg-[#7b8c76] text-white py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
                       >
                         Précédent
                       </button>
@@ -326,14 +326,14 @@ export default function Signup() {
                       <button
                         type="button"
                         onClick={nextStep}
-                        className="bg-[#7b8c76] text-black py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
+                        className="bg-[#7b8c76] text-white py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
                       >
                         Suivant
                       </button>
                     ) : (
                       <button
                         type="submit"
-                        className="bg-[#7b8c76] text-black py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
+                        className="bg-[#7b8c76] text-white py-2 px-4 rounded-full hover:bg-[#66735f] cursor-pointer"
                       >
                         S'inscrire
                       </button>
