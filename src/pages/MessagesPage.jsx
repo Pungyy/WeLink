@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient'; // ajuste selon ton setup
+import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import AddFriendButton from '../components/AddFriendButton';
 
