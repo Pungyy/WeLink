@@ -99,11 +99,18 @@ export default function ChatBox({ targetId }) {
 
       <div className="flex mt-auto">
         <input
-          className="flex-1 p-2 border rounded-l"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Écrire un message..."
-        />
+            className="flex-1 p-2 border rounded-l"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Écrire un message..."
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // éviter le saut de ligne
+                sendMessage();
+                }
+            }}
+            />
+
         <button
           className="bg-purple-500 text-white px-4 rounded-r"
           onClick={sendMessage}
