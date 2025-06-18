@@ -26,19 +26,19 @@ const DesktopNavbar = () => {
       <div className="flex items-center gap-8">
         <button
           onClick={() => navigate("/home")}
-          className="text-sm font-medium text-black hover:underline"
+          className="text-sm font-bold text-black hover:underline"
         >
           Accueil
         </button>
         <button
           onClick={() => navigate("/offres")}
-          className="text-sm font-medium text-black hover:underline"
+          className="text-sm font-bold text-black hover:underline"
         >
           Offres
         </button>
         <button
           onClick={() => navigate("/messages")}
-          className="text-sm font-medium text-black hover:underline"
+          className="text-sm font-bold text-black hover:underline"
         >
           Messages
         </button>
