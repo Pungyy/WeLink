@@ -7,6 +7,9 @@ import PrivateLayout from './components/PrivateLayout';
 import UserProfile from './pages/UserProfile';
 import MessagesPage from './pages/MessagesPage';
 import ChatPage from './pages/ChatPage';
+import CreateEventPage from './pages/CreateEventPage';
+import EvenementsPage from './pages/EvenementsPage';
+
 
 function App() {
   return (
@@ -50,6 +53,29 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        <Route
+          path="/create"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <CreateEventPage />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/evenements"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <EvenementsPage />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
 
         <Route
           path="/chat/:id"

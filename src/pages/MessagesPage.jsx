@@ -35,6 +35,8 @@ export default function MessagesPage() {
             .limit(1)
             .single();
 
+            
+
           return {
             ...ami,
             lastMessageDate: lastMsg?.created_at || null,

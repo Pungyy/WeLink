@@ -11,7 +11,7 @@ const DesktopNavbar = () => {
     <div className="hidden md:flex justify-between items-center px-10 py-4 shadow-sm border-b">
       {/* Logo */}
       <div className="flex items-center gap-2">
-        <img src={logo} alt="Logo Welink" className="h-8" />
+        <img src={logo} alt="Logo Welink" className="h-8 cursor-pointer" onClick={() => navigate("/home")}/>
       </div>
 
       {/* Bouton Créer une annonce */}
