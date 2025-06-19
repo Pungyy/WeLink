@@ -12,7 +12,8 @@ import CreateEventPage from './pages/CreateEventPage';
 import EvenementsPage from './pages/EvenementsPage';
 import GuideUtilisateur from './pages/GuideUtilisateur';
 import EvenementPage from './pages/EvenementPage';
-import NouveauteDetail from './pages/NouveauteDetail'; // le bon chemin
+import NouveauteDetail from './pages/NouveauteDetail';
+import ProfilPage from './pages/ProfilPage';
 
 
 function App() {
@@ -33,6 +34,17 @@ function App() {
             <PrivateRoute>
               <PrivateLayout>
                 <Home />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+         <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <ProfilPage />
               </PrivateLayout>
             </PrivateRoute>
           }
