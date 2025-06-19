@@ -23,7 +23,7 @@ export default function Login() {
       return;
     }
 
-    navigate('/home'); // Redirige vers ta page d'accueil
+    navigate('/home');
   };
 
   return (

@@ -1,12 +1,21 @@
-# React + Vite
+# WeLink - Application sociale d'événements
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Installation  
+- Cloner le dépôt  
+- Installer les dépendances : `npm install`  
+- Configurer les variables d'environnement dans `.env.local`  
+- Lancer le projet en local : `npm run dev`
 
-Currently, two official plugins are available:
+## Technologies utilisées  
+- React pour le front-end  
+- Tailwind CSS pour le design  
+- Supabase pour le back-end et la base de données
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Structure du projet  
+- /components : composants réutilisables  
+- /pages : pages principales  
+- /lib : configuration Supabase
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Sécurité  
+- Authentification via Supabase Auth  
+- Règles de sécurité (RLS) pour protéger les données utilisateurs

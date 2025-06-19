@@ -14,7 +14,8 @@ import GuideUtilisateur from './pages/GuideUtilisateur';
 import EvenementPage from './pages/EvenementPage';
 import NouveauteDetail from './pages/NouveauteDetail';
 import ProfilPage from './pages/ProfilPage';
-import CGVPage from './pages/CGVPage';
+import CGVPage from "./pages/CGVPage";
+
 
 
 function App() {
