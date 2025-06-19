@@ -5,7 +5,6 @@ export default function ProfilPage() {
   const [user, setUser] = useState(null);
   const [evenements, setEvenements] = useState([]);
   const [nouveautes, setNouveautes] = useState([]);
-  const [commentaires, setCommentaires] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,25 +49,9 @@ export default function ProfilPage() {
         .select("*")
         .in("id", nouveautesIds);
 
-      // Récupérer commentaires reçus avec alias 'auteur' sur user_id (l'auteur du commentaire)
-      const { data: commentairesData, error: commentairesError } = await supabase
-        .from("commentaires")
-        .select(`
-          id,
-          contenu,
-          created_at,
-          auteur:user_id (
-            prenom,
-            photo_profil
-          )
-        `)
-        .eq("user_target_id", userId)
-        .order("created_at", { ascending: false });
-
       setUser(userData);
       setEvenements(evenementsData || []);
       setNouveautes(nouveautesData || []);
-      setCommentaires(commentairesData || []);
       setLoading(false);
     };
 
@@ -173,43 +156,6 @@ export default function ProfilPage() {
             <p className="text-gray-500">
               Section porte-feuille à compléter selon ta logique métier.
             </p>
-          </section>
-
-          {/* Commentaires reçus */}
-          <section>
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-              💬 Commentaires reçus
-            </h2>
-
-            {commentaires.length === 0 ? (
-              <p className="text-gray-500 italic">Aucun commentaire disponible.</p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {commentaires.map(({ id, contenu, created_at, auteur }) => (
-                  <article
-                    key={id}
-                    className="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4"
-                  >
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={auteur?.photo_profil || "/default-avatar.png"}
-                        alt={auteur?.prenom || "Utilisateur"}
-                        className="w-12 h-12 rounded-full object-cover border border-gray-300"
-                      />
-                      <div>
-                        <p className="font-semibold text-lg">
-                          {auteur?.prenom || "Anonyme"}
-                        </p>
-                        <time className="text-sm text-gray-400">
-                          {new Date(created_at).toLocaleDateString()}
-                        </time>
-                      </div>
-                    </div>
-                    <p className="text-gray-700 leading-relaxed">{contenu}</p>
-                  </article>
-                ))}
-              </div>
-            )}
           </section>
         </div>
       </div>
