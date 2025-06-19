@@ -9,7 +9,7 @@ const tabs = [
   { name: "home", icon: homeIcon, path: "/home" },
   { name: "explore", icon: compassIcon, path: "/" },
   { name: "chat", icon: chatIcon, path: "/messages" },
-  { name: "profile", icon: userIcon, path: "/" },
+  { name: "profile", icon: userIcon, path: "/profile" },
 ];
 
 export default function MobileNavbar() {
