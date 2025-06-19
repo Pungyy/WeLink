@@ -4,7 +4,7 @@ import Footer from './Footer';
 
 export default function PrivateLayout({ children }) {
   return (
-    <div className="flex flex-col min-h-screen pb-20">
+    <div className="flex flex-col min-h-screen">
       <MainNavbar />
       <main className="flex-grow">
         {children}
