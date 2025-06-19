@@ -8,18 +8,14 @@ import ChatBox from '../components/ChatBox';
 export default function MessagesPage() {
   const [friends, setFriends] = useState([]);
   const [user, setUser] = useState(null);
-  const [targetUser, setTargetUser] = useState(null);
-
   const [selectedUserId, setSelectedUserId] = useState(null);
-
-  // Pour savoir si on est en version mobile
-  const isMobile = window.innerWidth < 768;
-
 
   const navigate = useNavigate();
   const { id: targetId } = useParams();
 
-  // Récupère l'utilisateur connecté
+  const isMobile = window.innerWidth < 768;
+
+  // Récupère l'utilisateur connecté + ses amis
   useEffect(() => {
     const fetchUserAndFriends = async () => {
       const { data: userData } = await supabase.auth.getUser();
@@ -63,37 +59,25 @@ export default function MessagesPage() {
     fetchUserAndFriends();
   }, []);
 
-  // Charger l'utilisateur cible
-  useEffect(() => {
-    const fetchTarget = async () => {
-      if (!targetId) return;
-      const { data } = await supabase
-        .from('utilisateurs')
-        .select('*')
-        .eq('id', targetId)
-        .single();
-      setTargetUser(data);
-    };
-    fetchTarget();
-  }, [targetId]);
+  // Marquer les messages comme lus pour un utilisateur
+  const markMessagesAsReadFor = async (senderId) => {
+    if (!user || !senderId) return;
+    await supabase
+      .from('messages')
+      .update({ vu: true })
+      .eq('receiver_id', user.id)
+      .eq('sender_id', senderId)
+      .eq('vu', false);
+  };
 
-  // Marquer les messages reçus comme lus
+  // Si targetId est défini (mobile), marquer les messages comme lus
   useEffect(() => {
-    const markMessagesAsRead = async () => {
-      if (!user || !targetId) return;
-      await supabase
-        .from('messages')
-        .update({ vu: true })
-        .eq('receiver_id', user.id)
-        .eq('sender_id', targetId)
-        .eq('vu', false);
-    };
-    markMessagesAsRead();
+    if (targetId) markMessagesAsReadFor(targetId);
   }, [user, targetId]);
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar gauche */}
+      {/* Colonne gauche - Liste des amis */}
       <div className="w-full md:w-1/3 lg:w-1/4 border-r h-full flex flex-col">
         <div className="bg-purple-200 p-4 text-center font-bold text-lg">Messages</div>
         <div className="flex-1 overflow-y-auto divide-y">
@@ -109,9 +93,11 @@ export default function MessagesPage() {
                     navigate(`/chat/${f.ami_id}`);
                   } else {
                     setSelectedUserId(f.ami_id);
-                    navigate('/messages'); // reste sur la page principale
+                    markMessagesAsReadFor(f.ami_id);
+                    navigate('/messages');
                   }
                 }}
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-100"
               >
                 <div className="flex items-center space-x-4">
                   <img
@@ -138,13 +124,11 @@ export default function MessagesPage() {
         </div>
       </div>
 
-      {/* Zone de chat droite */}
-      {/* Desktop */}
+      {/* Colonne droite - Zone de chat (desktop uniquement) */}
       <div className="hidden md:flex flex-col flex-1 h-full">
         {(targetId || selectedUserId) ? (
           <>
             <div className="flex items-center gap-3 bg-purple-200 p-4 shadow">
-              {/* Affichage avatar & prénom */}
               <img
                 src={
                   friends.find(f => f.ami_id === (targetId || selectedUserId))?.utilisateurs.photo_profil
@@ -170,7 +154,6 @@ export default function MessagesPage() {
           </div>
         )}
       </div>
-
     </div>
   );
 }
