@@ -1,5 +1,5 @@
-// src/components/Footer.jsx
 import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { Link } from 'react-router-dom'; // N'oublie pas ce import !
 
 export default function Footer() {
   return (
@@ -42,9 +42,17 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Texte en bas centré */}
-      <div className="mt-8 border-t border-gray-300 pt-4 text-center text-black font-medium">
-        Mention légale &nbsp;&nbsp;|&nbsp;&nbsp; Cookie &nbsp;&nbsp;|&nbsp;&nbsp; Assistance
+      {/* Texte en bas centré avec lien CGV */}
+      <div className="mt-8 border-t border-gray-300 pt-4 text-center text-black font-medium space-x-4">
+        <span>Mention légale</span>
+        <span>|</span>
+        <span>Cookie</span>
+        <span>|</span>
+        <span>Assistance</span>
+        <span>|</span>
+        <Link to="/cgv" className="hover:underline hover:text-green-800">
+          CGV
+        </Link>
       </div>
     </footer>
   );

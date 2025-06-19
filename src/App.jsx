@@ -14,6 +14,7 @@ import GuideUtilisateur from './pages/GuideUtilisateur';
 import EvenementPage from './pages/EvenementPage';
 import NouveauteDetail from './pages/NouveauteDetail';
 import ProfilPage from './pages/ProfilPage';
+import CGVPage from './pages/CGVPage';
 
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
         <Route path="/Signup" element={<Signup />} />
         <Route path="/confirmation" element={<ConfirmationPage />} />
         <Route path="/guide-utilisateur" element={<GuideUtilisateur />} />
+        <Route path="/cgv" element={<CGVPage />} />
+
 
         {/* Routes privées */}
         <Route
