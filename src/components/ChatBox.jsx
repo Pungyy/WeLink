@@ -7,8 +7,8 @@ export default function ChatBox({ targetId }) {
   const [input, setInput] = useState('');
   const [user, setUser] = useState(null);
   const bottomRef = useRef(null);
+  const scrollContainerRef = useRef(null); // REF pour zone scrollable
 
-  // Initialisation : charger user + messages + abonnement
   useEffect(() => {
     let channel;
 
@@ -19,8 +19,7 @@ export default function ChatBox({ targetId }) {
 
       setUser(currentUser);
 
-      // Charger les messages
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('messages')
         .select('*')
         .or(
@@ -28,35 +27,22 @@ export default function ChatBox({ targetId }) {
         )
         .order('created_at', { ascending: true });
 
-      if (error) {
-        console.error("Erreur de chargement des messages:", error);
-      } else {
-        setMessages(data);
-      }
+      setMessages(data);
 
       // Abonnement temps réel
       channel = supabase
         .channel('chat-realtime')
-        .on(
-          'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'messages' },
-          (payload) => {
-            console.log("🟢 Nouveau message reçu en temps réel:", payload);
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+          const msg = payload.new;
+          const isForThisChat =
+            (msg.sender_id === currentUser.id && msg.receiver_id === targetId) ||
+            (msg.sender_id === targetId && msg.receiver_id === currentUser.id);
 
-            const msg = payload.new;
-
-            const isForThisChat =
-              (msg.sender_id === currentUser.id && msg.receiver_id === targetId) ||
-              (msg.sender_id === targetId && msg.receiver_id === currentUser.id);
-
-            if (isForThisChat) {
-              setMessages((prev) => [...prev, msg]);
-            }
+          if (isForThisChat) {
+            setMessages((prev) => [...prev, msg]);
           }
-        )
+        })
         .subscribe();
-
-      console.log("✅ Abonnement au canal chat-realtime actif");
     };
 
     init();
@@ -66,12 +52,14 @@ export default function ChatBox({ targetId }) {
     };
   }, [targetId]);
 
-  // Scroll vers le bas à chaque nouveau message
+  // ✅ Scroll uniquement dans la zone des messages
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = scrollContainerRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }, [messages]);
 
-  // Envoi d’un message
   const sendMessage = async () => {
     if (!input.trim() || !user) return;
 
@@ -81,41 +69,47 @@ export default function ChatBox({ targetId }) {
       contenu: input,
     });
 
-    if (error) {
-      console.error("❌ Erreur lors de l'envoi du message:", error);
-    }
-
-    setInput('');
+    if (!error) setInput('');
   };
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto bg-gray-100 rounded p-4 mb-2">
+      {/* Zone de messages */}
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto px-4 py-4 space-y-2 bg-white"
+      >
         {messages.map((msg) => (
           <MessageBubble key={msg.id} msg={msg} userId={user?.id} />
         ))}
         <div ref={bottomRef} />
       </div>
 
-      <div className="flex mt-auto">
+      {/* Barre d'envoi */}
+      <div className="border-t px-4 py-2 bg-white flex items-center gap-2">
         <input
-            className="flex-1 p-2 border rounded-l"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Écrire un message..."
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); // éviter le saut de ligne
-                sendMessage();
-                }
-            }}
-            />
-
+          className="flex-1 p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Écrire message..."
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
+        />
         <button
-          className="bg-purple-500 text-white px-4 rounded-r"
           onClick={sendMessage}
+          className="bg-purple-500 hover:bg-purple-600 text-white p-2 rounded-full w-10 h-10 flex items-center justify-center"
         >
-          Envoyer
+          <svg
+            className="w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M2.94 2.94a.75.75 0 01.82-.17l13 5.5a.75.75 0 010 1.36l-13 5.5a.75.75 0 01-1.04-.9l1.3-4.33a.75.75 0 010-.48l-1.3-4.33a.75.75 0 01.22-.85z" />
+          </svg>
         </button>
       </div>
     </div>
