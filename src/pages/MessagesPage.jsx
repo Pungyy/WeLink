@@ -76,10 +76,13 @@ export default function MessagesPage() {
   }, [user, targetId]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex" style={{ height: 'calc(100vh - 288px)' }}>
+
       {/* Colonne gauche - Liste des amis */}
       <div className="w-full md:w-1/3 lg:w-1/4 border-r h-full flex flex-col">
-        <div className="bg-purple-200 p-4 text-center font-bold text-lg">Messages</div>
+      <div className="bg-purple-200 p-4 text-center font-bold text-lg" style={{ height: '56px' }}>
+        Messages
+      </div>
         <div className="flex-1 overflow-y-auto divide-y">
           {friends.map((f) => {
             const isReceived = f.lastMessageSender && f.lastMessageSender !== user?.id;
@@ -128,7 +131,7 @@ export default function MessagesPage() {
       <div className="hidden md:flex flex-col flex-1 h-full">
         {(targetId || selectedUserId) ? (
           <>
-            <div className="flex items-center gap-3 bg-purple-200 p-4 shadow">
+            <div className="flex items-center gap-3 bg-purple-200 p-4 shadow" style={{ height: '56px' }}>
               <img
                 src={
                   friends.find(f => f.ami_id === (targetId || selectedUserId))?.utilisateurs.photo_profil
