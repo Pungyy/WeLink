@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
+import MapView from '../components/MapView'; // importe ton composant MapView
 
 export default function NouveauteDetail() {
   const { id } = useParams();
@@ -15,7 +16,7 @@ export default function NouveauteDetail() {
       const currentUserId = userData?.user?.id;
       setUserId(currentUserId);
 
-      // Récupérer la nouveauté
+      // Récupérer la nouveauté avec créateur
       const { data, error } = await supabase
         .from('nouveautes')
         .select(`
@@ -76,7 +77,7 @@ export default function NouveauteDetail() {
   if (!nouveaute) return <div className="text-center py-12 text-red-500">Nouveauté introuvable.</div>;
 
   return (
-    <div className="flex justify-center px-4 py-10">
+    <div className="flex justify-center px-4 py-10 bg-gray-50 min-h-screen">
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-xl overflow-hidden">
         {nouveaute.image && (
           <img
@@ -89,6 +90,14 @@ export default function NouveauteDetail() {
         <div className="p-6 sm:p-8">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-purple-700">{nouveaute.titre}</h1>
           <p className="text-gray-700 mb-6">{nouveaute.description || 'Pas de description.'}</p>
+
+          {/* Affichage de la carte si localisation existe */}
+          {nouveaute.localisation && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-3">📍 Localisation</h2>
+              <MapView adresse={nouveaute.localisation} />
+            </div>
+          )}
 
           <div className="flex items-center gap-3 mb-8">
             <img
@@ -104,7 +113,7 @@ export default function NouveauteDetail() {
           {!isInscribed ? (
             <button
               onClick={handleInscription}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl transition duration-300 shadow-md w-full sm:w-auto"
+              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl transition duration-300 shadow-md w-full sm:w-auto cursor-pointer"
             >
               M'inscrire à cette nouveauté
             </button>

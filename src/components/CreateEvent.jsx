@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+const geocodeAdresse = async (adresse) => {
+  if (!adresse) return null;
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adresse)}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.length === 0) return null;
+  return {
+    lat: parseFloat(data[0].lat),
+    lng: parseFloat(data[0].lon),
+  };
+};
 
 export default function CreateEvent() {
   const [titre, setTitre] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [image, setImage] = useState(null);
+  const [localisation, setLocalisation] = useState('');
+  const [position, setPosition] = useState(null);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const inputClass = "px-5 py-3 rounded-full border border-gray-300 bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300 w-full";
+  const inputClass =
+    'px-5 py-3 rounded-full border border-gray-300 bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300 w-full';
 
   const handleDateChange = (e) => {
     let input = e.target.value.replace(/\D/g, '');
@@ -35,6 +52,17 @@ export default function CreateEvent() {
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
   };
 
+  // Geocode localisation chaque fois qu'elle change
+  useEffect(() => {
+    if (localisation) {
+      geocodeAdresse(localisation).then((pos) => {
+        setPosition(pos);
+      });
+    } else {
+      setPosition(null);
+    }
+  }, [localisation]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -47,8 +75,8 @@ export default function CreateEvent() {
       return;
     }
 
-    if (!titre || !description || !date) {
-      setMessage('Veuillez remplir tous les champs.');
+    if (!titre || !description || !date || !localisation) {
+      setMessage('Veuillez remplir tous les champs, y compris la localisation.');
       return;
     }
 
@@ -77,10 +105,10 @@ export default function CreateEvent() {
         description,
         date: isoDate,
         image: imageUrl,
-        createur_id: currentUser.id
-      }
+        createur_id: currentUser.id,
+        localisation,
+      },
     ]);
-
 
     if (insertError) {
       setMessage("Erreur lors de l'enregistrement : " + insertError.message);
@@ -128,6 +156,32 @@ export default function CreateEvent() {
             required
           />
 
+          <input
+            type="text"
+            placeholder="Localisation (adresse ou lieu)"
+            value={localisation}
+            onChange={(e) => setLocalisation(e.target.value)}
+            className={inputClass}
+            required
+          />
+
+          {position && (
+            <MapContainer
+              center={[position.lat, position.lng]}
+              zoom={13}
+              scrollWheelZoom={false}
+              style={{ height: '250px', width: '100%', borderRadius: '1rem', marginTop: '1rem' }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[position.lat, position.lng]}>
+                <Popup>{localisation}</Popup>
+              </Marker>
+            </MapContainer>
+          )}
+
           <div className="w-full">
             <input
               type="file"
@@ -166,9 +220,7 @@ export default function CreateEvent() {
             Créer l’événement
           </button>
 
-          {message && (
-            <p className="text-center text-sm text-red-500 mt-2">{message}</p>
-          )}
+          {message && <p className="text-center text-sm text-red-500 mt-2">{message}</p>}
         </form>
       </div>
     </motion.div>
