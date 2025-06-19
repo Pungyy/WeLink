@@ -154,7 +154,7 @@ export default function ProfilPage() {
               💼 Porte-feuille
             </h2>
             <p className="text-gray-500">
-              Section porte-feuille à compléter selon ta logique métier.
+              00.00€
             </p>
           </section>
         </div>
