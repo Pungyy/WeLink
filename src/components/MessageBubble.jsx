@@ -8,7 +8,7 @@ export default function MessageBubble({ msg, userId }) {
     <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} w-full`}>
       <div
         className={`max-w-[70%] px-4 py-2 rounded-xl text-sm ${
-          isMe ? 'bg-purple-300 text-black' : 'bg-green-300 text-black'
+          isMe ? 'bg-[#0C8336] text-white font-medium' : 'bg-purple-300 text-white font-medium'
         }`}
       >
         {msg.contenu}

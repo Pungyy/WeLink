@@ -8,17 +8,17 @@ export default function Footer() {
 
         {/* Partie gauche : newsletter */}
         <div className="md:w-1/2">
-          <h2 className="text-lg font-semibold mb-3 text-white">Inscris toi à notre newsletter</h2>
+          <h1 className="text-lg font-semibold mb-3 text-white">Inscris toi à notre newsletter</h1>
           <form className="flex max-w-md">
             <input
               type="email"
               placeholder="Votre email"
-              className="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-600"
+              className="bg-white flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-600"
               required
             />
             <button
               type="submit"
-              className="bg-green-600 text-white px-4 py-2 rounded-r-md hover:bg-green-700 transition"
+              className="bg-[#0C8336] text-white px-4 py-2 rounded-r-md hover:bg-green-700 transition"
             >
               Inscription
             </button>
@@ -27,7 +27,7 @@ export default function Footer() {
 
         {/* Partie droite : réseaux sociaux */}
         <div className="md:w-1/2 flex flex-col md:items-end">
-          <span className="mb-3 text-lg font-semibold">Retrouvez-nous sur :</span>
+          <h1 className="mb-3 text-lg font-semibold">Retrouvez-nous sur :</h1>
           <div className="flex space-x-4 text-black-600">
             <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:text-green-800">
               <FaFacebookF size={30} />

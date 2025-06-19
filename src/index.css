@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+* {
+  font-family: inherit;
+}
+
+
 @font-face {
     font-family: 'Expressa';
     src: url('/fonts/Expressa-Bold.ttf') format('truetype');
