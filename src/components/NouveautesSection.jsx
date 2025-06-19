@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient"; // ajuste le chemin
+import { useNavigate } from "react-router-dom"; // <-- ici
+import { supabase } from "../lib/supabaseClient";
 
 const NouveautesSection = () => {
   const [nouveautes, setNouveautes] = useState([]);
+  const navigate = useNavigate(); // <-- ici
 
   useEffect(() => {
     const fetchNouveautes = async () => {
-     const { data, error } = await supabase
-      .from("nouveautes")
-      .select(`
-        *,
-        utilisateurs:createur_id (
-          id,
-          prenom,
-          photo_profil
-        )
-      `)
-      .order("created_at", { ascending: false });
-
+      const { data, error } = await supabase
+        .from("nouveautes")
+        .select(`
+          *,
+          utilisateurs:createur_id (
+            id,
+            prenom,
+            photo_profil
+          )
+        `)
+        .order("created_at", { ascending: false });
 
       if (error) {
         console.error("Erreur chargement nouveautés :", error);
@@ -29,6 +30,10 @@ const NouveautesSection = () => {
     fetchNouveautes();
   }, []);
 
+  const handleCardClick = (id) => {
+    navigate(`/nouveautes/${id}`);
+  };
+
   return (
     <section className="bg-[#fff] px-6 py-10">
       <div className="container mx-auto">
@@ -37,7 +42,8 @@ const NouveautesSection = () => {
           {nouveautes.map((item) => (
             <div
               key={item.id}
-              className="rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 w-[260px] sm:w-[300px]"
+              onClick={() => handleCardClick(item.id)} // <-- redirection ici
+              className="rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 w-[260px] sm:w-[300px] cursor-pointer"
             >
               <div className="relative">
                 {item.image && (
@@ -57,7 +63,9 @@ const NouveautesSection = () => {
                   alt="avatar"
                   className="w-10 h-10 rounded-full object-cover"
                 />
-                <p className="text-sm font-medium">{item.utilisateurs?.prenom || 'Auteur inconnu'}</p>
+                <p className="text-sm font-medium">
+                  {item.utilisateurs?.prenom || 'Auteur inconnu'}
+                </p>
               </div>
             </div>
           ))}

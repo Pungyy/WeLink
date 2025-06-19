@@ -12,7 +12,7 @@ import CreateEventPage from './pages/CreateEventPage';
 import EvenementsPage from './pages/EvenementsPage';
 import GuideUtilisateur from './pages/GuideUtilisateur';
 import EvenementPage from './pages/EvenementPage';
-
+import NouveauteDetail from './pages/NouveauteDetail'; // le bon chemin
 
 
 function App() {
@@ -93,6 +93,16 @@ function App() {
           }
         />
 
+        <Route
+          path="//nouveautes/:id"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <NouveauteDetail />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
 
 
         <Route
