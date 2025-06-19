@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function EvenementsPage() {
   const [evenements, setEvenements] = useState([]);
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchEvenements = async () => {
@@ -26,8 +31,10 @@ export default function EvenementsPage() {
         {evenements.map((e) => (
           <div
             key={e.id}
-            className="border border-gray-300 rounded-xl p-4 shadow-sm bg-white"
+            onClick={() => navigate(`/evenements/${e.id}`)}
+            className="cursor-pointer border border-gray-300 rounded-xl p-4 shadow-sm bg-white hover:shadow-md transition"
           >
+
             <h2 className="text-xl font-semibold">{e.titre}</h2>
             <p className="text-sm text-gray-500 mb-2">{e.date}</p>
             <p className="mb-3">{e.description}</p>
