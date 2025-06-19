@@ -29,19 +29,40 @@ export default function ChatBox({ targetId }) {
 
       setMessages(data);
 
-      // Abonnement temps réel
+      // Abonnement temps réel : INSERT + UPDATE
       channel = supabase
         .channel('chat-realtime')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-          const msg = payload.new;
-          const isForThisChat =
-            (msg.sender_id === currentUser.id && msg.receiver_id === targetId) ||
-            (msg.sender_id === targetId && msg.receiver_id === currentUser.id);
+        .on(
+          'postgres_changes', 
+          { event: 'INSERT', schema: 'public', table: 'messages' }, 
+          (payload) => {
+            const msg = payload.new;
+            const isForThisChat =
+              (msg.sender_id === currentUser.id && msg.receiver_id === targetId) ||
+              (msg.sender_id === targetId && msg.receiver_id === currentUser.id);
 
-          if (isForThisChat) {
-            setMessages((prev) => [...prev, msg]);
+            if (isForThisChat) {
+              setMessages((prev) => [...prev, msg]);
+            }
           }
-        })
+        )
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'messages' },
+          (payload) => {
+            const updatedMsg = payload.new;
+            const isForThisChat =
+              (updatedMsg.sender_id === currentUser.id && updatedMsg.receiver_id === targetId) ||
+              (updatedMsg.sender_id === targetId && updatedMsg.receiver_id === currentUser.id);
+
+            if (isForThisChat) {
+              // Met à jour le message dans la liste
+              setMessages((prev) =>
+                prev.map((msg) => (msg.id === updatedMsg.id ? updatedMsg : msg))
+              );
+            }
+          }
+        )
         .subscribe();
     };
 
@@ -50,7 +71,8 @@ export default function ChatBox({ targetId }) {
     return () => {
       if (channel) supabase.removeChannel(channel);
     };
-  }, [targetId]);
+}, [targetId]);
+
 
   // ✅ Scroll uniquement dans la zone des messages
   useEffect(() => {
