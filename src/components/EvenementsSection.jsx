@@ -8,7 +8,10 @@ const EvenementsSection = () => {
     const fetchEvenements = async () => {
       const { data, error } = await supabase
         .from("evenements")
-        .select("*")
+        .select(`
+          *,
+          utilisateurs:createur_id ( id, prenom, photo_profil )
+        `)
         .order("date", { ascending: true });
 
       if (error) {
@@ -49,9 +52,22 @@ const EvenementsSection = () => {
                     year: "numeric",
                   })}
                 </p>
+
+                {/* Créateur de l'événement */}
+                <div className="flex items-center mt-3 gap-3">
+                  <img
+                    src={event.utilisateurs?.photo_profil || '/default-avatar.png'}
+                    alt="Avatar"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <span className="text-sm text-gray-700 font-medium">
+                    {event.utilisateurs?.prenom || 'Inconnu'}
+                  </span>
+                </div>
               </div>
             </div>
           ))}
+
         </div>
       </div>
     </section>

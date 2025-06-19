@@ -6,10 +6,18 @@ const NouveautesSection = () => {
 
   useEffect(() => {
     const fetchNouveautes = async () => {
-      const { data, error } = await supabase
-        .from("nouveautes")
-        .select("*")
-        .order("created_at", { ascending: false });
+     const { data, error } = await supabase
+      .from("nouveautes")
+      .select(`
+        *,
+        utilisateurs:createur_id (
+          id,
+          prenom,
+          photo_profil
+        )
+      `)
+      .order("created_at", { ascending: false });
+
 
       if (error) {
         console.error("Erreur chargement nouveautés :", error);
@@ -45,11 +53,11 @@ const NouveautesSection = () => {
               </div>
               <div className="flex items-center gap-2 p-4">
                 <img
-                  src="/colette.jpg" // Optionnel : rendre dynamique via `item.auteur_image`
+                  src={item.utilisateurs?.photo_profil || '/default-avatar.png'}
                   alt="avatar"
                   className="w-10 h-10 rounded-full object-cover"
                 />
-                <p className="text-sm font-medium">{item.auteur}</p>
+                <p className="text-sm font-medium">{item.utilisateurs?.prenom || 'Auteur inconnu'}</p>
               </div>
             </div>
           ))}

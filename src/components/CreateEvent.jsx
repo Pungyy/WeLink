@@ -39,6 +39,14 @@ export default function CreateEvent() {
     e.preventDefault();
     setMessage('');
 
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    const currentUser = authData?.user;
+
+    if (!currentUser || authError) {
+      setMessage("Impossible de récupérer l'utilisateur connecté.");
+      return;
+    }
+
     if (!titre || !description || !date) {
       setMessage('Veuillez remplir tous les champs.');
       return;
@@ -64,8 +72,15 @@ export default function CreateEvent() {
     }
 
     const { error: insertError } = await supabase.from('evenements').insert([
-      { titre, description, date: isoDate, image: imageUrl }
+      {
+        titre,
+        description,
+        date: isoDate,
+        image: imageUrl,
+        createur_id: currentUser.id
+      }
     ]);
+
 
     if (insertError) {
       setMessage("Erreur lors de l'enregistrement : " + insertError.message);
