@@ -10,22 +10,34 @@ const UtilisateursSection = () => {
 
   useEffect(() => {
     const fetchUtilisateurs = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        setError("Utilisateur non connecté.");
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from("utilisateurs")
         .select("id, prenom, photo_profil, description")
-        .limit(20)
-        .order('prenom', { ascending: true });
+        .limit(50)
+        .order("prenom", { ascending: true });
 
       if (error) {
         setError(error.message);
       } else {
-        setUtilisateurs(data);
+        // Exclure l'utilisateur connecté
+        const autres = data.filter((u) => u.id !== user.id);
+        setUtilisateurs(autres);
       }
+
       setLoading(false);
     };
 
     fetchUtilisateurs();
   }, []);
+
 
   if (loading) return (
     <div className="flex justify-center items-center py-10">
