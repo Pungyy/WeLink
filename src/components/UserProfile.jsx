@@ -12,6 +12,9 @@ const UserProfile = ({ id }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
+  const [friendRequestStatus, setFriendRequestStatus] = useState(null); // null, en_attente, accepte, refuse
+  const [sendingRequest, setSendingRequest] = useState(false);
+
   useEffect(() => {
     const fetchUser = async () => {
       const { data, error } = await supabase
@@ -57,6 +60,66 @@ const UserProfile = ({ id }) => {
   useEffect(() => {
     if (id) fetchComments();
   }, [id]);
+
+  const checkFriendRequest = async () => {
+    const { data: sessionData } = await supabase.auth.getUser();
+    const currentUserId = sessionData?.user?.id;
+    if (!currentUserId) return;
+
+    const { data, error } = await supabase
+      .from("demandes_amis")
+      .select("statut")
+      .or(
+        `sender_id.eq.${currentUserId},receiver_id.eq.${currentUserId}`
+      )
+      .eq("receiver_id", id)
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (data?.length > 0) {
+      setFriendRequestStatus(data[0].statut);
+    }
+  };
+
+  useEffect(() => {
+    if (id) checkFriendRequest();
+  }, [id]);
+
+  const handleSendFriendRequest = async () => {
+    setSendingRequest(true);
+
+    const { data: sessionData } = await supabase.auth.getUser();
+    const currentUserId = sessionData?.user?.id;
+
+    if (!currentUserId || currentUserId === id) {
+      setSendingRequest(false);
+      return;
+    }
+
+    const { error } = await supabase.from("demandes_amis").insert([
+      {
+        sender_id: currentUserId,
+        receiver_id: id,
+        statut: "en_attente",
+      },
+    ]);
+
+    if (!error) {
+      setFriendRequestStatus("en_attente");
+
+      await supabase.from("notifications").insert([
+        {
+          user_id: id,
+          contenu: `📩 Nouvelle demande d’ami reçue !`,
+          type: "demande_ami",
+          lien: `/demandes`,
+        },
+      ]);
+    }
+
+    setSendingRequest(false);
+  };
+
 
   const handleCommentSubmit = async () => {
     setIsSubmitting(true);
@@ -120,6 +183,28 @@ const UserProfile = ({ id }) => {
               <p className="mt-2 max-w-xs text-sm opacity-80">
                 {user.localisation || "Localisation inconnue"}
               </p>
+
+              {friendRequestStatus === null && (
+                <button
+                  onClick={handleSendFriendRequest}
+                  disabled={sendingRequest}
+                  className="mt-3 px-4 py-2 bg-purple-400 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50 cursor-pointer"
+                >
+                  {sendingRequest ? "Envoi..." : "Envoyer une demande d’ami"}
+                </button>
+              )}
+
+              {friendRequestStatus === "en_attente" && (
+                <p className="mt-3 text-yellow-200 text-sm">📨 Demande en attente</p>
+              )}
+
+              {friendRequestStatus === "accepte" && (
+                <p className="mt-3 text-green-200 text-sm">✅ Vous êtes amis</p>
+              )}
+
+              {friendRequestStatus === "refuse" && (
+                <p className="mt-3 text-red-200 text-sm">❌ Demande refusée</p>
+              )}
             </div>
           </div>
         </div>

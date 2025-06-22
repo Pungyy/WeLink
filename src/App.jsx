@@ -15,6 +15,8 @@ import EvenementPage from './pages/EvenementPage';
 import NouveauteDetail from './pages/NouveauteDetail';
 import ProfilPage from './pages/ProfilPage';
 import CGVPage from "./pages/CGVPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import DemandesPage from "./pages/DemandesPage";
 
 
 
@@ -93,6 +95,28 @@ function App() {
             <PrivateRoute>
               <PrivateLayout>
                 <EvenementsPage />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <NotificationsPage  />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/demandes"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <DemandesPage  />
               </PrivateLayout>
             </PrivateRoute>
           }

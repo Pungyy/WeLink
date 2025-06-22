@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilPage() {
   const [user, setUser] = useState(null);
   const [evenements, setEvenements] = useState([]);
   const [nouveautes, setNouveautes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfilData = async () => {
@@ -25,7 +27,7 @@ export default function ProfilPage() {
         .eq("id", userId)
         .single();
 
-      // Récupérer événements inscrits
+      // Événements
       const { data: evenementsIdsData } = await supabase
         .from("evenements_participants")
         .select("evenement_id")
@@ -37,7 +39,7 @@ export default function ProfilPage() {
         .select("*")
         .in("id", evenementsIds);
 
-      // Récupérer nouveautés inscrites
+      // Nouveautés
       const { data: nouveautesIdsData } = await supabase
         .from("nouveautes_participants")
         .select("nouveaute_id")
@@ -89,6 +91,22 @@ export default function ProfilPage() {
               <p className="mt-2 max-w-xs text-sm opacity-80">
                 {user.localisation || "Localisation inconnue"}
               </p>
+
+              {/* Boutons actions */}
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button
+                  onClick={() => navigate("/notifications")}
+                  className="bg-white text-[#7b8c76] font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition"
+                >
+                  🔔 Notifications
+                </button>
+                <button
+                  onClick={() => navigate("/demandes")}
+                  className="bg-white text-[#7b8c76] font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition"
+                >
+                  👥 Demandes d’amis
+                </button>
+              </div>
             </div>
           </div>
         </div>
