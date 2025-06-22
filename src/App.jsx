@@ -17,7 +17,8 @@ import ProfilPage from './pages/ProfilPage';
 import CGVPage from "./pages/CGVPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import DemandesPage from "./pages/DemandesPage";
-
+import PricingPage from './pages/PricingPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 
 function App() {
@@ -77,6 +78,31 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        <Route
+          path="/offres"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <PricingPage />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/explore/checkout"
+          element={
+            <PrivateRoute>
+              <PrivateLayout>
+                <CheckoutPage />
+              </PrivateLayout>
+            </PrivateRoute>
+          }
+        />
+
+
+
 
         <Route
           path="/create"

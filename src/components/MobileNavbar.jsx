@@ -7,7 +7,7 @@ import userIcon from "../assets/img/vector.png";
 
 const tabs = [
   { name: "home", icon: homeIcon, path: "/home" },
-  { name: "explore", icon: compassIcon, path: "/" },
+  { name: "explore", icon: compassIcon, path: "/offres" },
   { name: "chat", icon: chatIcon, path: "/messages" },
   { name: "profile", icon: userIcon, path: "/profile" },
 ];
