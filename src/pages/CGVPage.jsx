@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 export default function CGVPage() {
   return (
     
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen ">
       <MainNavbar />
 
         <main className="flex-grow py-10 px-4 sm:px-6 lg:px-8">

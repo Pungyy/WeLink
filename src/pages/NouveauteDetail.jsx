@@ -77,7 +77,7 @@ export default function NouveauteDetail() {
   if (!nouveaute) return <div className="text-center py-12 text-red-500">Nouveauté introuvable.</div>;
 
   return (
-    <div className="flex justify-center px-4 py-10 bg-gray-50 min-h-screen">
+    <div className="flex justify-center px-4 py-10">
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-xl overflow-hidden">
         {nouveaute.image && (
           <img

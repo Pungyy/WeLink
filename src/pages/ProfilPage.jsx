@@ -71,7 +71,7 @@ export default function ProfilPage() {
     return <p className="text-center p-6 text-red-500">Utilisateur non connecté.</p>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
+    <div className=" py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg overflow-hidden">
         {/* Header profil */}
         <div className="bg-[#7b8c76] p-8 relative rounded-b-[50px] flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-12">
